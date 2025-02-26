@@ -1,0 +1,4 @@
+node server.js
+set NODE_OPTIONS=--openssl-legacy-provider && npm start
+cd frontend
+npm start

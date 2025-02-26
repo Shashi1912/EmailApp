@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailConfig>
+    <Sender>
+        <Email>angajalashashikumar@gmail.com</Email>
+        <Password>sttdyiofulhftvzg</Password>
+    </Sender>
+    
+    <Attachment>
+        <ResumePath>C:\AutoMail\Shashikumar_Angajala_Automation_Test_Engineer_Resume.pdf</ResumePath>
+    </Attachment>
+
+    <EmailContent>
+        <Subject>Application for Software Test Engineer Role | Angajala Shashikumar</Subject>
+        <Body>
+            <![CDATA[
+Hi,
+
+I'm excited to share my profile for the QA role. With over three years of experience in software testing, including both manual and automation testing, I have consistently delivered results by improving workflows, enhancing application reliability, and excelling in dynamic environments.
+
+At Zen Technologies Ltd., I led initiatives that improved test execution efficiency without compromising quality. By automating critical integration tests using Selenium with Java, I significantly reduced manual effort while ensuring consistent performance. My expertise in designing test strategies for complex military training simulators showcases my ability to address intricate problems with precision and innovation.
+
+Key contributions include:
+            - Developing efficient test automation frameworks to enhance operational performance.
+            - Collaborating with cross-functional teams to mitigate risks and improve system reliability.
+            - Receiving the Key Contributor Award for delivering mission-critical projects that exceeded client expectations.
+
+I am eager to bring my skills and dedication to your company. My proficiency in tools like Selenium, Java, Unreal Engine, and Agile methodologies positions me to contribute effectively to your team’s success.
+
+Details for your reference:
+
+- Total Experience: 3 years 3 months
+- Current Company: Zen Technologies Ltd.
+Reason for Change: Seeking opportunities to further enhance my expertise in automation testing, contribute to challenging projects, and grow professionally in a dynamic environment that aligns with my career aspirations.
+
+Preferred Location: Hyderabad
+
+I have attached my resume for your review. Please let me know if you require any further details or documentation. I would be delighted to discuss how my experience aligns with Infosys' goals and how I can contribute to the success of your team.
+
+Warm regards,
+Angajala Shashikumar
+Hyderabad, Telangana, India
+Phone: +91 8801954605
+Email: angajalashashikumar@gmail.com
+LinkedIn: [Shashikumar Angajala](https://www.linkedin.com/in/shashikumar-angajala-19937a20a)
+            ]]>
+        </Body>
+    </EmailContent>
+
+    <UIConfig>
+        <BackgroundColor>#E0E0E0</BackgroundColor> <!-- Light Gray -->
+        <StatusSuccessColor>#2ECC71</StatusSuccessColor> <!-- Green -->
+        <StatusErrorColor>#E74C3C</StatusErrorColor> <!-- Red -->
+    </UIConfig>
+</EmailConfig>

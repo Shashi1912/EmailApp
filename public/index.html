@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender</title>
+</head>
+<body>
+    <h2>Email Sender</h2>
+    <input type="email" id="recipientEmail" placeholder="Enter recipient email" required>
+    <button onclick="sendEmail()">Send Email</button>
+    
+    <p id="responseMessage"></p>
+
+    <script>
+        function sendEmail() {
+            const recipientEmail = document.getElementById("recipientEmail").value;
+
+            fetch("/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ recipientEmail })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+            })
+            .catch(error => {
+                document.getElementById("responseMessage").innerText = "Error sending email!";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</body>
+</html>
