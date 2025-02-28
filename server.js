@@ -62,7 +62,8 @@ app.post("/send-email", async (req, res) => {
                 text: emailConfig.EmailContent[0].Body[0],
                 attachments: [
                     {
-                        path: emailConfig.Attachment[0].ResumePath[0],
+                        path: path.join(__dirname, emailConfig.Attachment[0].ResumePath[0]),
+
                     },
                 ],
             };
