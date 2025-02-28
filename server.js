@@ -6,40 +6,32 @@ const { parseString } = require("xml2js");
 const path = require("path");
 
 const app = express();
-const PORT = 5000; 
+const PORT = 5000;
 
 app.use(express.json());
 app.use(cors());
 
-// Serve frontend files
+// Serve the frontend files
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load email configuration from XML
-const configPath = path.join(__dirname, "Config.xml");
 let emailConfig = {};
+const configPath = path.join(__dirname, "Config.xml");
 
-const loadConfig = () => {
-    return new Promise((resolve, reject) => {
-        fs.readFile(configPath, "utf-8", (err, data) => {
-            if (err) {
-                console.error("❌ Failed to load Config.xml:", err);
-                return reject(err);
-            }
-            parseString(data, (err, result) => {
-                if (err) {
-                    console.error("❌ XML Parsing Error:", err);
-                    return reject(err);
-                }
-                emailConfig = result.EmailConfig;
-                console.log("✅ Config loaded successfully.");
-                resolve(emailConfig);
-            });
-        });
+fs.readFile(configPath, "utf-8", (err, data) => {
+    if (err) {
+        console.error("❌ Failed to load Config.xml:", err);
+        return;
+    }
+    parseString(data, (err, result) => {
+        if (err) {
+            console.error("❌ XML Parsing Error:", err);
+            return;
+        }
+        emailConfig = result.EmailConfig;
+        console.log("✅ Config loaded successfully.");
     });
-};
-
-// Ensure configuration is loaded at startup
-loadConfig().catch(() => console.log("⚠️ Continuing without config. Ensure Config.xml is available."));
+});
 
 // Email sending endpoint
 app.post("/send-email", async (req, res) => {
@@ -49,54 +41,43 @@ app.post("/send-email", async (req, res) => {
         return res.status(400).json({ success: false, message: "❌ Recipient email is required!" });
     }
 
+    // Split multiple emails if provided
+    const emailList = recipientEmail.split(",").map(email => email.trim());
+
+    // Ensure the attachment file exists
+    const attachmentPath = path.join(__dirname, "public", "attachments", emailConfig.Attachment[0].ResumePath[0]);
+
+    if (!fs.existsSync(attachmentPath)) {
+        console.error(`❌ Attachment not found at: ${attachmentPath}`);
+        return res.status(500).json({ success: false, message: "❌ Attachment file is missing!" });
+    }
+
     try {
-        // Reload config if empty
-        if (!emailConfig.Sender) {
-            await loadConfig();
-        }
-
-        // Validate email configuration
-        if (!emailConfig.Sender || !emailConfig.Sender[0].Email || !emailConfig.Sender[0].Password) {
-            return res.status(500).json({ success: false, message: "❌ Email configuration is missing." });
-        }
-
-        const senderEmail = emailConfig.Sender[0].Email[0];
-        const senderPassword = emailConfig.Sender[0].Password[0];
-        const subject = emailConfig.EmailContent[0].Subject[0];
-        const body = emailConfig.EmailContent[0].Body[0];
-        const attachmentPath = path.join(__dirname, emailConfig.Attachment[0].ResumePath[0]);
-
-        // Check if the attachment file exists
-        if (!fs.existsSync(attachmentPath)) {
-            return res.status(500).json({ success: false, message: `❌ Attachment not found at ${attachmentPath}` });
-        }
-
-        const emailList = recipientEmail.split(",").map(email => email.trim());
-
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: senderEmail,
-                pass: senderPassword,
+                user: emailConfig.Sender[0].Email[0],
+                pass: emailConfig.Sender[0].Password[0],
             },
         });
 
-        // Send emails in parallel using Promise.all
-        await Promise.all(emailList.map(email => {
+        // Send emails one by one
+        for (let email of emailList) {
             let mailOptions = {
-                from: senderEmail,
+                from: emailConfig.Sender[0].Email[0],
                 to: email,
-                subject: subject,
-                text: body,
-                attachments: [{ path: attachmentPath }],
+                subject: emailConfig.EmailContent[0].Subject[0],
+                text: emailConfig.EmailContent[0].Body[0],
+                attachments: [
+                    {
+                        path: attachmentPath,
+                    },
+                ],
             };
 
-            return transporter.sendMail(mailOptions).then(info => {
-                console.log(`✅ Email sent to ${email}: ${info.response}`);
-            }).catch(error => {
-                console.error(`❌ Failed to send email to ${email}:`, error);
-            });
-        }));
+            let info = await transporter.sendMail(mailOptions);
+            console.log(`✅ Email sent successfully to ${email}: ${info.response}`);
+        }
 
         res.json({ success: true, message: "✅ Emails sent successfully!" });
 
