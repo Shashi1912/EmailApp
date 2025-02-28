@@ -6,7 +6,7 @@
     </Sender>
     
     <Attachment>
-        <ResumePath>C:\AutoMail\Shashikumar_Angajala_Automation_Test_Engineer_Resume.pdf</ResumePath>
+        <ResumePath>public/attachments/Shashikumar_Angajala_Automation_Test_Resume.pdf</ResumePath>
     </Attachment>
 
     <EmailContent>
